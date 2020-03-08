@@ -22,7 +22,6 @@
         window.onload = () => {
             initBox()
         }
-
     }
     const initBox = () => {
         const style = `#rushToBuyBox{background-color:rgba(255,255,255,0.7);width:260px;font-size:14px;position:fixed;top:20%;right:-150px;padding:10px;border-radius:5px;box-shadow:1px 1px 9px 0 #888;transition:right 1s;text-align:center}#rushToBuyBox:hover{right:10px}.title{font-size:16px;font-weight:bold;margin:10px 0}.title span{font-size:12px;color:#9c9c9c}#formList{margin:10px}.time span{color:red}#formList input{background:0;height:20px;font-size:14px;outline:0;border:1px solid #ccc;margin-bottom:10px}#formList input:focus{border:1px solid #4ebd0d}#formList div span{font-size:12px;color:red}#formList div{margin-bottom:10px}.countdown{margin-top:10px}`
@@ -58,7 +57,7 @@
         document.head.appendChild(stylenode);
         document.body.appendChild(node);
 
-        document.querySelector('#offsetTime').innerText = rush.business.offsetTime
+        document.querySelector('#offsetTime').innerText = rush.business.offsetTime + 'ms'
         document.querySelector('#timer').innerText = rush.business.timer + 'ms'
 
         const g_startTime = document.querySelector('#g_startTime')
