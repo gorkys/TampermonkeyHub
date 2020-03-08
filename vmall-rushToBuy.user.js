@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         华为商城抢购
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.0
+// @version      1.1.1
 // @description  try to take over the world!
 // @author       Gorkys
 // @license      MIT
+
 // @match        https://www.vmall.com/product/*.html
+// @match        https://*.cloud.huawei.com/*
 // @match        https://www.vmall.com/product/*.html?*
 // @match        https://www.vmall.com/order/nowConfirmcart
 // @supportURL   https://github.com/gorkys/TampermonkeyHub
@@ -15,6 +17,18 @@
 
 (function () {
     'use strict';
+
+    window.onload = () => {
+        // 自动登录(浏览器记住密码的情况下)
+        if (window.location.href.indexOf('cloud.huawei') !== -1) {
+            setTimeout(() => { $('#btnLogin').click() }, 2000)
+        }
+        // 提交订单
+        if (window.location.href.indexOf('order') !== -1) {
+            ec.order.confirmSubmit()
+        }
+    }
+
     // 检查登录情况
     if (rush.account.isLogin() === null) {
         rush.business.doGoLogin()
@@ -135,9 +149,4 @@
         var time = D + " 天" + H + ":" + M + ":" + S;
         return time
     }
-    // 提交订单
-    if (ec.order !== undefined) {
-        ec.order.confirmSubmit()
-    }
-
 })();
