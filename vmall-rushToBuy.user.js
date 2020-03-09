@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华为商城抢购
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.1
+// @version      1.1.2
 // @description  try to take over the world!
 // @author       Gorkys
 // @license      MIT
@@ -29,13 +29,15 @@
         }
     }
 
+    let cycle = 0
+
     // 检查登录情况
-    if (rush.account.isLogin() === null) {
-        rush.business.doGoLogin()
-    } else {
+    if (rush.account.isLogin()) {
         window.onload = () => {
             initBox()
         }
+    } else {
+        rush.business.doGoLogin()
     }
     const initBox = () => {
         const style = `#rushToBuyBox{background-color:rgba(255,255,255,0.7);width:260px;font-size:14px;position:fixed;top:20%;right:-150px;padding:10px;border-radius:5px;box-shadow:1px 1px 9px 0 #888;transition:right 1s;text-align:center}#rushToBuyBox:hover{right:10px}.title{font-size:16px;font-weight:bold;margin:10px 0}.title span{font-size:12px;color:#9c9c9c}#formList{margin:10px}.time span{color:red}#formList input{background:0;height:20px;font-size:14px;outline:0;border:1px solid #ccc;margin-bottom:10px}#formList input:focus{border:1px solid #4ebd0d}#formList div span{font-size:12px;color:red}#formList div{margin-bottom:10px}.countdown{margin-top:10px}`
@@ -53,7 +55,7 @@
                             <input type="text" id="g_startTime"  value="" placeholder="2020/03/07 12:49:00" />
                             <div>提前开始时间<span>(ms)</span></div>
                             <input type="text" id="g_beforeStartTime" value="" placeholder="150" /></br>
-                            <button id='rushToBuy'>开始运行</button>
+                            <button id='rushToBuy'>开始运行</button><button style='margin-left:5px' id='stop'>停止</button>
                         </form>
                         <div class='countdown'>倒计时: <span id='countdown'>1天 2:3:4</span></div>
                     </div>
@@ -85,16 +87,19 @@
             document.querySelector('#countdown').innerText = getDistanceSpecifiedTime(g_startTime.value, rush.business.getSysDate())
         }, 1000)
 
-
-        let cycle = 0
-
         const countdown = document.querySelector('#rushToBuy')
+        const stop = document.querySelector('#stop')
         countdown.addEventListener('click', () => {
-            countdown.disabled = 'disabled'
+            countdown.disabled = true
             countdown.innerText = '抢购中...'
             cycle = setInterval(() => {
                 getServerTime(g_startTime.value, g_beforeStartTime.value)
-            }, 200)
+            }, 100)
+        })
+        stop.addEventListener('click', () => {
+            countdown.disabled = false
+            countdown.innerText = '开始运行'
+            clearInterval(cycle)
         })
     }
     // 获取服务器时间
@@ -124,10 +129,10 @@
     // 提前申购
     const rushToBuy = (getStartTime, currentTime, g_beforeStartTime) => {
         const startTime = new Date(getStartTime).getTime()
-        if (startTime - currentTime < + g_beforeStartTime) {
+        if (startTime - currentTime <= + g_beforeStartTime) {
             rush.business.doGoRush(2);
             // console.log('开始抢了,' + (startTime - currentTime).toString())
-            // clearInterval(cycle)
+            clearInterval(cycle)
         }
     }
     // 抢购倒计时对比
