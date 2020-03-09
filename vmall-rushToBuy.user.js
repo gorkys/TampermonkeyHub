@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华为商城抢购
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.3
+// @version      1.1.4
 // @description  try to take over the world!
 // @author       Gorkys
 // @license      MIT
@@ -80,7 +80,7 @@
         const g_beforeStartTime = document.querySelector('#g_beforeStartTime')
         // 设置活动开始时间
         g_startTime.value = rush.activity.getActivity(rush.sbom.getCurrSkuId()).startTime
-        g_beforeStartTime.value = '150'
+        g_beforeStartTime.value = '20'
 
         // 倒计时
         const countdownId = setInterval(() => {
@@ -89,12 +89,11 @@
 
         const countdown = document.querySelector('#rushToBuy')
         const stop = document.querySelector('#stop')
+
         countdown.addEventListener('click', () => {
             countdown.disabled = true
             countdown.innerText = '抢购中...'
-            cycle = setInterval(() => {
-                getServerTime(g_startTime.value, g_beforeStartTime.value)
-            }, 100)
+            getServerTime(g_startTime.value, g_beforeStartTime.value)
         })
         stop.addEventListener('click', () => {
             countdown.disabled = false
@@ -104,34 +103,21 @@
     }
     // 获取服务器时间
     const getServerTime = (g_startTime, g_beforeStartTime) => {
-        let data = null;
+        $.get('https://buy.vmall.com/getSkuRushbuyInfo.json', (res) => {
+            const startTime = new Date(g_startTime).getTime()
 
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-        const skuId = rush.sbom.getCurrSkuId()
+            let currentTime = res.currentTime
 
-        xhr.open("GET", "https://buy.vmall.com/getSkuRushbuyInfo.json");
-        // xhr.setRequestHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 UBrowser/6.2.4098.3 Safari/537.36");
-
-        xhr.send(data);
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                const res = JSON.parse(this.responseText)
-                const getStartTime = new Date(g_startTime).getTime()
-
-                const currentTime = res.currentTime
-                // console.log(getDistanceSpecifiedTime(getStartTime, currentTime))
-                rushToBuy(getStartTime, currentTime, g_beforeStartTime)
-            }
-        });
+            cycle = setInterval(() => {
+                rushToBuy(startTime, currentTime, g_beforeStartTime)
+                currentTime += 10
+            }, 10)
+        })
     }
     // 提前申购
-    const rushToBuy = (getStartTime, currentTime, g_beforeStartTime) => {
-        const startTime = new Date(getStartTime).getTime()
+    const rushToBuy = (startTime, currentTime, g_beforeStartTime) => {
         if (startTime - currentTime <= + g_beforeStartTime) {
             rush.business.doGoRush(2);
-            // console.log('开始抢了,' + (startTime - currentTime).toString())
             clearInterval(cycle)
         }
     }

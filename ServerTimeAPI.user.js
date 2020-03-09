@@ -101,12 +101,12 @@
         const m = date.getMinutes();// 分
         const s = date.getSeconds();// 秒
         const ms = Math.floor(new Date().getMilliseconds() / 100) // 毫秒 + ' ' + ms
-        return formatTime(h) + ':' + formatTime(m) + ':' + formatTime(s) + '.' + ms
+        return fillZero(h) + ':' + fillZero(m) + ':' + fillZero(s) + '.' + ms
     }
     // 时间补0
-    const formatTime = (value) => {
-        const time = value < 10 ? '0' + value : value
-        return time.toString()
+    const fillZero = (str, len = 2) => {
+        return (`${str}`).padStart(len, '0')
+        // return (`${str}`).slice(-len)
     }
 
     initBox()
