@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华为商城抢购
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.2
+// @version      1.1.3
 // @description  try to take over the world!
 // @author       Gorkys
 // @license      MIT
