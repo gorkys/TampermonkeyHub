@@ -147,11 +147,11 @@
         var h = Math.floor(t / 1000 / 60 / 60 % 24);
         var m = Math.floor(t / 1000 / 60 % 60);
         var s = Math.floor(t / 1000 % 60);
-        const D = d < 10 ? '0' + d : d
-        const H = h < 10 ? '0' + h : h
-        const M = m < 10 ? '0' + m : m
-        const S = s < 10 ? '0' + s : s
-        var time = D + " 天" + H + ":" + M + ":" + S;
-        return time
+        return `${fillZero(d)}天 ${fillZero(h)}:${fillZero(m)}:${fillZero(s)}`
+    }
+    // 补零
+    const fillZero = (str, len = 2) => {
+        return (`${str}`).padStart(len, '0')
+        // return (`${str}`).slice(-len)
     }
 })();
