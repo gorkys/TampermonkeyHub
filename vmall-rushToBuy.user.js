@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         华为商城抢购助手
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.5
-// @description  try to take over the world!
+// @version      1.1.6
+// @description  同步华为商城服务器时间，毫秒级华为商城抢购助手
 // @author       Gorkys
 // @license      MIT
 
@@ -10,8 +10,9 @@
 // @match        https://*.cloud.huawei.com/*
 // @match        https://www.vmall.com/product/*.html?*
 // @match        https://www.vmall.com/order/nowConfirmcart
-// @supportURL   https://github.com/gorkys/TampermonkeyHub
+// @supportURL   https://github.com/gorkys/TampermonkeyHub/issues
 // @updateURL    https://github.com/gorkys/TampermonkeyHub/vmall-rushToBuy.user.js
+// @downloadURL  https://github.com/gorkys/TampermonkeyHub/raw/master/vmall-rushToBuy.user.js
 // @grant        none
 // ==/UserScript==
 
@@ -85,7 +86,9 @@
             const refreshTime = document.querySelector('#refreshTime')
                 // 设置活动开始时间
             g_startTime.value = rush.activity.getActivity(rush.sbom.getCurrSkuId()).startTime
-            g_beforeStartTime.value = '200'
+            g_beforeStartTime.value = 200
+            refreshTime.value = 30
+
 
             // 倒计时
             const countdownId = setInterval(() => {
@@ -97,9 +100,7 @@
 
             isRefresh.addEventListener('change', () => {
                 sessionStorage.setItem('isRefresh', isRefresh.checked)
-                if (isRefresh.checked) {
-                    refreshTime.disabled = !isRefresh.checked
-                }
+                refreshTime.disabled = !isRefresh.checked
             })
 
             countdown.addEventListener('click', () => {
@@ -108,6 +109,7 @@
                 sessionStorage.setItem('g_startTime', g_startTime.value)
                 sessionStorage.setItem('g_beforeStartTime', g_beforeStartTime.value)
                 sessionStorage.setItem('isRun', true)
+
                 getServerTime(g_startTime.value, g_beforeStartTime.value)
             })
             stop.addEventListener('click', () => {
@@ -146,7 +148,7 @@
         }
         // 提前申购
     const rushToBuy = (startTime, currentTime, g_beforeStartTime) => {
-            if (startTime - currentTime <= +g_beforeStartTime) {
+            if (startTime - currentTime <= g_beforeStartTime) {
                 rush.business.doGoRush(2);
                 sessionStorage.setItem('isRun', false)
                 clearInterval(cycle)
