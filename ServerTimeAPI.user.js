@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         各电商平台服务器时间
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.0.0
+// @version      1.0.1
 // @description  try to take over the world!
 // @author       Gorkys
 // @license      MIT
