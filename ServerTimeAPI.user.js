@@ -15,7 +15,7 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
 
     const initBox = () => {
@@ -26,19 +26,19 @@
                         各电商平台服务器时间 <span>by: Gorkys</span>
                     </h3>
                     <div class='time'>
-                        <p>淘宝 :&nbsp;&nbsp; <span id='taobao'>无法获取</span></p>
-                        <p>华为 :&nbsp;&nbsp; <span id='vmall'>无法获取</span></p>
-                        <p>京东 :&nbsp;&nbsp; <span id='jd'>无法获取</span></p>
-                        <p>苏宁 :&nbsp;&nbsp; <span id='suning'>无法获取</span></p>
-                        <p>拼多多 : <span id='pinduoduo'>无法获取</span></p>
+                        <p><a href='http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp'>淘宝</a> :&nbsp;&nbsp; <span id='taobao'>无法获取</span></p>
+                        <p><a href='https://a.jd.com//ajax/queryServerData.html'>华为</a> :&nbsp;&nbsp; <span id='vmall'>无法获取</span></p>
+                        <p><a href='https://buy.vmall.com/getSkuRushbuyInfo.json'>京东</a> :&nbsp;&nbsp; <span id='jd'>无法获取</span></p>
+                        <p><a href='https://ju.m.suning.com/ajax/getSystemTime_querySystemTime2.html'>苏宁</a> :&nbsp;&nbsp; <span id='suning'>无法获取</span></p>
+                        <p><a href='https://api.pinduoduo.com/api/server/_stm'>拼多多</a> : <span id='pinduoduo'>无法获取</span></p>
                     </div>
                 </div>
                 `
         var stylenode = document.createElement('style');
         stylenode.setAttribute("type", "text/css");
-        if (stylenode.styleSheet) {// IE
+        if (stylenode.styleSheet) { // IE
             stylenode.styleSheet.cssText = style;
-        } else {// w3c
+        } else { // w3c
             var cssText = document.createTextNode(style);
             stylenode.appendChild(cssText);
         }
@@ -62,14 +62,14 @@
 
         xhr.send(data);
 
-        xhr.addEventListener("readystatechange", function () {
+        xhr.addEventListener("readystatechange", function() {
             if (this.readyState === 4) {
                 let getTime = ''
                 const res = type === 'suning' ? eval(this.responseText) : JSON.parse(this.responseText)
 
                 switch (type) {
                     case 'taobao':
-                        getTime = + res.data.t
+                        getTime = +res.data.t
                         break
                     case 'jd':
                         getTime = res.serverTime
@@ -84,29 +84,32 @@
                         getTime = res.server_time
                         break
                 }
-                document.querySelector(`#${type}`).innerText = formatDate(getTime)
+                setInterval(() => {
+                    document.querySelector(`#${type}`).innerText = formatDate(getTime)
+                    getTime += 100
+                }, 100)
             }
         });
     }
 
     // 时间戳转换日期格式
     const formatDate = (value) => {
-        const date = new Date(+value + 100);
-        // const yyyy = date.getFullYear();// 年
-        // const MM = date.getMonth() + 1;// 月
-        // MM = MM < 10 ? ('0' + MM) : MM;
-        // const dd = date.getDate();// 日
-        // dd = dd < 10 ? ('0' + dd) : dd;
-        const h = date.getHours();// 时
-        const m = date.getMinutes();// 分
-        const s = date.getSeconds();// 秒
-        const ms = Math.floor(new Date().getMilliseconds() / 100) // 毫秒 + ' ' + ms
-        return fillZero(h) + ':' + fillZero(m) + ':' + fillZero(s) + '.' + ms
-    }
-    // 时间补0
+            const date = new Date(+value + 100);
+            // const yyyy = date.getFullYear();// 年
+            // const MM = date.getMonth() + 1;// 月
+            // MM = MM < 10 ? ('0' + MM) : MM;
+            // const dd = date.getDate();// 日
+            // dd = dd < 10 ? ('0' + dd) : dd;
+            const h = date.getHours(); // 时
+            const m = date.getMinutes(); // 分
+            const s = date.getSeconds(); // 秒
+            const ms = Math.floor(new Date().getMilliseconds() / 100) // 毫秒 + ' ' + ms
+            return fillZero(h) + ':' + fillZero(m) + ':' + fillZero(s) + '.' + ms
+        }
+        // 时间补0
     const fillZero = (str, len = 2) => {
         return (`${str}`).padStart(len, '0')
-        // return (`${str}`).slice(-len)
+            // return (`${str}`).slice(-len)
     }
 
     initBox()
@@ -120,12 +123,10 @@
         pinduoduo: 'https://api.pinduoduo.com/api/server/_stm'
     }
 
-    setInterval(() => {
-        for (let i in timeAPI) {
-            if (window.location.href.indexOf(i) != -1) {
-                ajaxSeverTime(timeAPI[i], i)
-            }
+    for (let i in timeAPI) {
+        if (window.location.href.indexOf(i) != -1) {
+            ajaxSeverTime(timeAPI[i], i)
         }
-    }, 100)
+    }
 
 })();
