@@ -27,8 +27,8 @@
                     </h3>
                     <div class='time'>
                         <p><a href='http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp'>淘宝</a> :&nbsp;&nbsp; <span id='taobao'>无法获取</span></p>
-                        <p><a href='https://a.jd.com//ajax/queryServerData.html'>华为</a> :&nbsp;&nbsp; <span id='vmall'>无法获取</span></p>
-                        <p><a href='https://buy.vmall.com/getSkuRushbuyInfo.json'>京东</a> :&nbsp;&nbsp; <span id='jd'>无法获取</span></p>
+                        <p><a href='https://buy.vmall.com/getSkuRushbuyInfo.json'>华为</a> :&nbsp;&nbsp; <span id='vmall'>无法获取</span></p>
+                        <p><a href='https://a.jd.com//ajax/queryServerData.html'>京东</a> :&nbsp;&nbsp; <span id='jd'>无法获取</span></p>
                         <p><a href='https://ju.m.suning.com/ajax/getSystemTime_querySystemTime2.html'>苏宁</a> :&nbsp;&nbsp; <span id='suning'>无法获取</span></p>
                         <p><a href='https://api.pinduoduo.com/api/server/_stm'>拼多多</a> : <span id='pinduoduo'>无法获取</span></p>
                     </div>
@@ -71,11 +71,11 @@
                     case 'taobao':
                         getTime = +res.data.t
                         break
-                    case 'jd':
-                        getTime = res.serverTime
-                        break
                     case 'vmall':
                         getTime = res.currentTime
+                        break
+                    case 'jd':
+                        getTime = res.serverTime
                         break
                     case 'suning':
                         getTime = res.timeStamp
@@ -117,8 +117,8 @@
     const timeAPI = {
         taobao: 'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp',
         // 可带参数https://buy.vmall.com/getSkuRushbuyInfo.json?skuIds=10086175997878&t=1583496687456
-        jd: 'https://a.jd.com//ajax/queryServerData.html',
         vmall: 'https://buy.vmall.com/getSkuRushbuyInfo.json',
+        jd: 'https://a.jd.com//ajax/queryServerData.html',
         suning: 'https://ju.m.suning.com/ajax/getSystemTime_querySystemTime2.html?_=1583498034772&callback=querySystemTime2',
         pinduoduo: 'https://api.pinduoduo.com/api/server/_stm'
     }
