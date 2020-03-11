@@ -4,7 +4,7 @@
 
 ## 💽 安装插件
 
-请确保已先安装 [Tampermonkey] (https://www.tampermonkey.net/) 脚本管理器
+请确保已先安装 [Tampermonkey](https://www.tampermonkey.net/) 脚本管理器
 ### 华为商城抢购(vmall-rushToBuy.user.js)
 > 说明: 本脚本用于抢购华为手机。灵感来源于[vmall-rush-to-buy](https://github.com/a6051529/vmall-rush-to-buy)
 
