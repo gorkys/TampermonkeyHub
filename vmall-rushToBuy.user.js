@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华为商城抢购助手
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.6
+// @version      1.1.7
 // @description  同步华为商城服务器时间，毫秒级华为商城抢购助手
 // @author       Gorkys
 // @license      MIT
@@ -22,7 +22,16 @@
     window.onload = () => {
         // 自动登录(浏览器记住密码的情况下)
         if (window.location.href.indexOf('cloud.huawei') !== -1) {
-            setTimeout(() => { $('#btnLogin').click() }, 2000)
+            if ($('div').hasClass('hwid-login-btn')) {
+                setTimeout(() => {
+                    $('.button-base-box').click()
+                }, 2000)
+            } else {
+                setTimeout(() => {
+                    $('#btnLogin').click()
+                }, 2000)
+            }
+
         }
         // 提交订单
         if (window.location.href.indexOf('order') !== -1) {
