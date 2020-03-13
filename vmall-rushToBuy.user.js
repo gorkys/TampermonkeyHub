@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华为商城抢购助手
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.1.7
+// @version      1.1.8
 // @description  同步华为商城服务器时间，毫秒级华为商城抢购助手
 // @author       Gorkys
 // @license      MIT
@@ -20,35 +20,39 @@
     'use strict';
 
     window.onload = () => {
-        // 自动登录(浏览器记住密码的情况下)
+        // 自动登录
         if (window.location.href.indexOf('cloud.huawei') !== -1) {
-            if ($('div').hasClass('hwid-login-btn')) {
-                setTimeout(() => {
-                    $('.button-base-box').click()
-                }, 2000)
-            } else {
-                setTimeout(() => {
-                    $('#btnLogin').click()
-                }, 2000)
+            // 浏览器记住密码的情况下
+            if ($('.hwid-password-root input').val() !== '' && $('.hwid-input-border-error input').val() !== '') {
+                $('.button-base-box').click()
             }
-
+            // 用户首次登录记住账号密码到浏览器,自动刷新时出现未登录的情况将自动登录
+            if (sessionStorage.getItem('username') && sessionStorage.getItem('password')) {
+                $('.hwid-password-root input').val(sessionStorage.getItem('username'))
+                $('.hwid-input-border-error input').val(sessionStorage.getItem('password'))
+                $('.button-base-box').click()
+            } else {
+                $('.hwid-login-btn-wrap').click(() => {
+                    sessionStorage.setItem('username', $('.hwid-password-root input').val())
+                    sessionStorage.setItem('password', $('.hwid-input-border-error input').val())
+                })
+            }
         }
         // 提交订单
         if (window.location.href.indexOf('order') !== -1) {
             ec.order.confirmSubmit()
         }
+        // 检查登录情况
+        if (rush.account.isLogin()) {
+            initBox()
+        } else {
+            // ec.account.afterLogin()  弹窗登录
+            rush.business.doGoLogin() //页面登录
+        }
     }
 
     let cycle = 0
 
-    // 检查登录情况
-    if (rush.account.isLogin()) {
-        window.onload = () => {
-            initBox()
-        }
-    } else {
-        rush.business.doGoLogin()
-    }
     const initBox = () => {
             const style = `#rushToBuyBox{background-color:rgba(255,255,255,0.7);width:260px;font-size:14px;position:fixed;top:20%;right:-150px;padding:10px;border-radius:5px;box-shadow:1px 1px 9px 0 #888;transition:right 1s;text-align:center}#rushToBuyBox:hover{right:10px}.title{font-size:16px;font-weight:bold;margin:10px 0}.title span{font-size:12px;color:#9c9c9c}#formList{margin:10px}.time span{color:red}#formList input{background:0;height:20px;font-size:14px;outline:0;border:1px solid #ccc;margin-bottom:10px}#formList input:focus{border:1px solid #4ebd0d}#formList div span{font-size:12px;color:red}#formList div{margin-bottom:10px}.countdown{margin-top:10px}`
             const html = `
