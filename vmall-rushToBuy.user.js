@@ -14,8 +14,7 @@
 // @supportURL   https://github.com/gorkys/TampermonkeyHub/issues
 // @updateURL    https://github.com/gorkys/TampermonkeyHub/vmall-rushToBuy.user.js
 // @downloadURL  https://github.com/gorkys/TampermonkeyHub/raw/master/vmall-rushToBuy.user.js
-// @require      https://libs.baidu.com/jquery/2.1.4/jquery.min.js
-// @grant        none
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
 (function () {
@@ -29,10 +28,10 @@
         // 自动登录
         if (window.location.href.indexOf('cloud.huawei') !== -1) {
             // 浏览器记住密码的情况下
-            setTimeout(()=>{
+            setTimeout(() => {
                 $('body').click()
             }, 1000)
-            setTimeout(()=>{
+            setTimeout(() => {
                 $('.button-base-box').click()
             }, 2000)
         }
@@ -43,27 +42,27 @@
 
         // 检查登录情况
         // 318 秒杀活动
-        if(window.location.href.indexOf('/rush') !== -1){
-            if(ec.account.isLogin()){
-                const skuIds = ec.skuList.map((item)=>{return item.skuInfo[0].id}).join(',')
+        if (window.location.href.indexOf('/rush') !== -1) {
+            if (ec.account.isLogin()) {
+                const skuIds = ec.skuList.map((item) => { return item.skuInfo[0].id }).join(',')
                 const getTime = new Date().getTime()
                 getSkuRushbuyInfo(skuIds, getTime)
-            }else{
+            } else {
                 window.location.replace(ec.loginUrl)
             }
         }
         // 商城申购
-        if(window.location.href.indexOf('/product') !== -1){
-            if(rush.account.isLogin()){
+        if (window.location.href.indexOf('/product') !== -1) {
+            if (rush.account.isLogin()) {
                 const skuIds = rush.sbom.getCurrSkuId()
                 const getTime = new Date().getTime()
                 getSkuRushbuyInfo(skuIds, getTime)
-            }else{
-               // ec.account.afterLogin()  弹窗登录
+            } else {
+                // ec.account.afterLogin()  弹窗登录
                 rush.business.doGoLogin() //页面登录
             }
         }
-       
+
     }
 
     let cycle = 0
@@ -177,25 +176,29 @@
         })
     }
     // 获取活动信息
-    const getSkuRushbuyInfo = (skuIds, getTime)=>{
-        const params = {
-            skuIds: skuIds,
-            t: new Date().getTime()
+    const getSkuRushbuyInfo = (skuIds, getTime) => {
+        const details = {
+            method: 'GET',
+            url: `https://buy.vmall.com/getSkuRushbuyInfo.json?skuIds=${skuIds}&t=${new Date().getTime()}`,
+            onload: (responseDetails) => {
+                if (responseDetails.status === 200) {
+                    const res = JSON.parse(responseDetails.responseText)
+                    NETWORKTIME = new Date().getTime() - getTime
+                    OFFSETTIME = res.currentTime - new Date().getTime()
+                    STARTTIME = res.skuRushBuyInfoList[0].startTime
+                    initBox()
+                }
+            }
         }
-        $.get('https://buy.vmall.com/getSkuRushbuyInfo.json', params, (res) => {
-            NETWORKTIME = new Date().getTime() - getTime
-            OFFSETTIME = res.currentTime - new Date().getTime()
-            STARTTIME = res.skuRushBuyInfoList[0].startTime
-            initBox()
-        })
+        GM_xmlhttpRequest(details)
     }
     // 提前申购
     const rushToBuy = (startTime, currentTime, g_beforeStartTime) => {
         if (startTime - currentTime <= g_beforeStartTime) {
-            if(window.location.href.indexOf('/rush') !== -1){
+            if (window.location.href.indexOf('/rush') !== -1) {
                 ec.submit(0)
             }
-            if(window.location.href.indexOf('/product') !== -1){
+            if (window.location.href.indexOf('/product') !== -1) {
                 rush.business.doGoRush(1);
             }
             sessionStorage.setItem('isRun', false)
