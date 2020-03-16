@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         各电商平台服务器时间
 // @namespace    https://github.com/gorkys/TampermonkeyHub
-// @version      1.0.1
+// @version      1.0.2
 // @description  try to take over the world!
 // @author       Gorkys
 // @license      MIT
@@ -10,9 +10,10 @@
 // @match        *://*.vmall.com/*
 // @match        *://*.suning.com/*
 // @match        *://*.pinduoduo.com/*
+// @match        *://*.dewu.com/*
 // @supportURL   https://github.com/gorkys/TampermonkeyHub
 // @updateURL    https://github.com/gorkys/TampermonkeyHub/ServerTimeAPI.user.js
-// @grant        none
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
 (function() {
@@ -31,6 +32,7 @@
                         <p><a href='https://a.jd.com//ajax/queryServerData.html'>京东</a> :&nbsp;&nbsp; <span id='jd'>无法获取</span></p>
                         <p><a href='https://ju.m.suning.com/ajax/getSystemTime_querySystemTime2.html'>苏宁</a> :&nbsp;&nbsp; <span id='suning'>无法获取</span></p>
                         <p><a href='https://api.pinduoduo.com/api/server/_stm'>拼多多</a> : <span id='pinduoduo'>无法获取</span></p>
+                        <p><a href='https://m.poizon.com/client/cold'>得物(毒)</a> : <span id='dewu'>无法获取</span></p>
                     </div>
                 </div>
                 `
@@ -53,43 +55,41 @@
     }
 
     const ajaxSeverTime = (url, type) => {
-        let data = null;
+        const details = {
+            method: 'GET',
+            url: url,
+            onload: (responseDetails) => {
+                if (responseDetails.status === 200) {
+                    let getTime = ''
+                    const res = type === 'suning' ? eval(responseDetails.responseText) : JSON.parse(responseDetails.responseText)
 
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.open("GET", url);
-
-        xhr.send(data);
-
-        xhr.addEventListener("readystatechange", function() {
-            if (this.readyState === 4) {
-                let getTime = ''
-                const res = type === 'suning' ? eval(this.responseText) : JSON.parse(this.responseText)
-
-                switch (type) {
-                    case 'taobao':
-                        getTime = +res.data.t
-                        break
-                    case 'vmall':
-                        getTime = res.currentTime
-                        break
-                    case 'jd':
-                        getTime = res.serverTime
-                        break
-                    case 'suning':
-                        getTime = res.timeStamp
-                        break
-                    case 'pinduoduo':
-                        getTime = res.server_time
-                        break
+                    switch (type) {
+                        case 'taobao':
+                            getTime = +res.data.t
+                            break
+                        case 'vmall':
+                            getTime = res.currentTime
+                            break
+                        case 'jd':
+                            getTime = res.serverTime
+                            break
+                        case 'suning':
+                            getTime = res.timeStamp
+                            break
+                        case 'pinduoduo':
+                            getTime = res.server_time
+                            break
+                        case 'dewu':
+                            getTime = +res.data.timestamp
+                    }
+                    setInterval(() => {
+                        document.querySelector(`#${type}`).innerText = formatDate(getTime)
+                        getTime += 100
+                    }, 100)
                 }
-                setInterval(() => {
-                    document.querySelector(`#${type}`).innerText = formatDate(getTime)
-                    getTime += 100
-                }, 100)
             }
-        });
+        }
+        GM_xmlhttpRequest(details)
     }
 
     // 时间戳转换日期格式
@@ -120,7 +120,8 @@
         vmall: 'https://buy.vmall.com/getSkuRushbuyInfo.json',
         jd: 'https://a.jd.com//ajax/queryServerData.html',
         suning: 'https://ju.m.suning.com/ajax/getSystemTime_querySystemTime2.html?_=1583498034772&callback=querySystemTime2',
-        pinduoduo: 'https://api.pinduoduo.com/api/server/_stm'
+        pinduoduo: 'https://api.pinduoduo.com/api/server/_stm',
+        dewu: 'https://m.poizon.com/client/cold'
     }
 
     for (let i in timeAPI) {
