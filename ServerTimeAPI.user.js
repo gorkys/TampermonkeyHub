@@ -115,6 +115,7 @@
     initBox()
 
     const timeAPI = {
+        // http://acs.m.taobao.com/gw/mtop.common.getTimestamp/ 备用
         taobao: 'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp',
         // 可带参数https://buy.vmall.com/getSkuRushbuyInfo.json?skuIds=10086175997878&t=1583496687456
         vmall: 'https://buy.vmall.com/getSkuRushbuyInfo.json',
