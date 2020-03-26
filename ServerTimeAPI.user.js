@@ -120,6 +120,7 @@
         // 招商银行  https://act.cmbchina.com/ActShipMobile/api/wechat/getWechatAuth data={requestUrl=} type: POST
         // 当当网    https://api.dangdang.com/swan/product/homeCouponInfo
         // 多点      https://a.dmall.com/act/4QiMB0Iv6ZjRd.html
+        // 国美      https://im-platform.gome.com.cn/im-platform/system/serverTime.json?appId=gomeplus_pro
         // http://acs.m.taobao.com/gw/mtop.common.getTimestamp/ 备用
         taobao: 'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp',
         // 可带参数https://buy.vmall.com/getSkuRushbuyInfo.json?skuIds=10086175997878&t=1583496687456
