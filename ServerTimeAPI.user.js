@@ -121,7 +121,10 @@
         // 当当网    https://api.dangdang.com/swan/product/homeCouponInfo
         // 多点      https://a.dmall.com/act/4QiMB0Iv6ZjRd.html
         // 国美      https://im-platform.gome.com.cn/im-platform/system/serverTime.json?appId=gomeplus_pro
-        // http://acs.m.taobao.com/gw/mtop.common.getTimestamp/ 备用
+        // 淘宝备用  http://acs.m.taobao.com/gw/mtop.common.getTimestamp/
+        // 华为备用  https://mbuy.vmall.com/getSkuRushbuyInfo.json
+        // 考拉海淘  https://t.alicdn.com/t/gettime
+        //          https://1phhyg.tdum.alibaba.com/dss.js
         taobao: 'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp',
         // 可带参数https://buy.vmall.com/getSkuRushbuyInfo.json?skuIds=10086175997878&t=1583496687456
         vmall: 'https://buy.vmall.com/getSkuRushbuyInfo.json',
