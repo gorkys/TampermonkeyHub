@@ -119,7 +119,7 @@
         //          https://time.hd.mi.com/gettimestamp
         // 招商银行  https://act.cmbchina.com/ActShipMobile/api/wechat/getWechatAuth data={requestUrl=} type: POST
         // 当当网    https://api.dangdang.com/swan/product/homeCouponInfo
-        // 多点      https://a.dmall.com/act/4QiMB0Iv6ZjRd.html
+        // 多点      https://appapis.dmall.com/static/queryUserCheckInfo.jsonp
         // 国美      https://im-platform.gome.com.cn/im-platform/system/serverTime.json?appId=gomeplus_pro
         // 淘宝备用  http://acs.m.taobao.com/gw/mtop.common.getTimestamp/
         // 华为备用  https://mbuy.vmall.com/getSkuRushbuyInfo.json
